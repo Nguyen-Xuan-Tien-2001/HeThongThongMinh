@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   		http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/context
+	   		http://www.springframework.org/schema/context/spring-context.xsd
+	   		http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/mvc 
+			http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- Spring MVC Annotation -->
+	<context:annotation-config />
+	<mvc:annotation-driven />
+
+	<!-- Cấu hình folder resources công khai -->
+	<mvc:resources mapping="/resources/**"
+		location="/resources/" />
+
+	<!-- Cấu hình view -->
+	<bean id="viewResolver" p:prefix="/WEB-INF/views/" p:suffix=".jsp"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver" />
+	<tx:annotation-driven proxy-target-class="true"
+		transaction-manager="transactionManager" />
+	<!-- Cấu hình các package -->
+	<context:component-scan
+		base-package="cnpm.controller" />
+	<context:component-scan
+		base-package="cnpm.service" />
+	<context:component-scan base-package="cnpm.dao" />
+
+	<!-- upload photo -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- maxUploadSize=20MB -->
+		<property name="maxUploadSize" value="20971520" />
+	</bean>
+
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="465" />
+		<property name="username" value="nxthuong0119@gmail.com" />
+		<property name="password" value="yhkhndthroogacwn" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+				<prop key="mail.smtp.socketFactory.port">465</prop>
+				<prop key="mail.smtp.starttls.enable">false</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Kết nối CSDL -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		p:driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+		p:url="jdbc:sqlserver://localhost:1433; Database=QuanLyCuaHangGiayDep"
+		p:username="sa" p:password="123">
+	</bean>
+
+	<!-- Cấu hình Hibernate -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="cnpm.entity" />
+	</bean>
+
+	<!-- Transaction Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory" />
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+
+	<!-- Cấu hình interceptor -->
+	<mvc:interceptors>
+		<!-- Lọc tất cả các URL -->
+		<!-- <bean class="ltweb.interceptor.UserInterceptor" /> -->
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/dangnhap" />
+			<mvc:mapping path="/dangky" />
+
+			<bean class="cnpm.interceptor.DangNhapInterceptor" />
+		</mvc:interceptor>
+		
+		<bean class="cnpm.interceptor.ResetInterceptor" />
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/dangnhap" />
+			<mvc:mapping path="/dangky" />
+
+			<bean class="cnpm.interceptor.DangNhapInterceptor" />
+		</mvc:interceptor>
+
+		<!-- Chỉ lọc các URL theo path -->
+		<mvc:interceptor>
+			<mvc:mapping path="/quanly/**" />
+			<bean class="cnpm.interceptor.QuanLyInterceptor" />
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/nhanvien/**" />
+			<bean class="cnpm.interceptor.NhanVienInterceptor" />
+		</mvc:interceptor>
+
+		<mvc:interceptor>
+			<mvc:mapping path="/taikhoan" />
+				<mvc:mapping path="/taikhoan/**" />
+			<mvc:mapping path="/giohang/**" />
+			<mvc:mapping path="/donhang/**" />
+			<mvc:mapping path="/thanhtoan" />
+			<bean class="cnpm.interceptor.KhachHangInterceptor" />
+		</mvc:interceptor>
+
+
+		<!-- <mvc:interceptor>
+			<mvc:mapping path="/user/**" />
+			<mvc:exclude-mapping path="/login.htm" />
+			<mvc:exclude-mapping path="/register.htm" />
+			<mvc:exclude-mapping path="/forgot-password.htm" />
+			<mvc:exclude-mapping path="/activate.htm" />
+			<bean class="cnpm.interceptor.QuanLyInterceptor" />
+		</mvc:interceptor> -->
+
+
+	</mvc:interceptors>
+</beans>

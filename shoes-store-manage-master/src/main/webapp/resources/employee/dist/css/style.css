@@ -1,0 +1,15 @@
+.navbar-top {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.017em;
+}
+
+.navbar-middle {
+    padding: 2.7rem 0;
+}
+
+.footer-product {
+    margin-left: 0 !important;
+}

@@ -1,0 +1,56 @@
+:root { 
+	--font-family-sans-serif: "Monsterrat", sans-serif;
+	--font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+		"Liberation Mono", "Courier New", monospace;
+}
+
+body {
+	font-family: "Monsterrat", sans-serif;
+}
+
+.input-search-table {
+	width: 60%;
+}
+
+@media screen and (max-width: 768px) {
+	.input-search-table {
+		width: 100%;
+	}
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+}
+
+.bg-white {
+	background-color: beige;
+}
+
+.border-gray {
+	border-color: gray;
+	border-width: 2px;
+}
+
+.hr {
+	background-color: black;
+}
+
+.bg-dark {
+	background-color: black;
+}
+/* Bootstrap css */
+@import
+	"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	;
+
+/* Google Material icons */
+@import "http://fonts.googleapis.com/icon?family=Material+Icons";
+
+/* Propeller css */
+@import "dist/css/propeller.min.css";
+
+/* Bootstrap datetimepicker */
+@import "datetimepicker/css/bootstrap-datetimepicker.css";
+
+/* Propeller datetimepicker */
+@import "datetimepicker/css/pmd-datetimepicker.css";
